@@ -18,11 +18,7 @@
 
 %w{ rubygems find yaml active_support }.each { |lib| require lib }
 
-MAX_FEED_ITEMS = 30
 IGNORE = /^(\.|cvs|.svn|trash)/i
-FEED_LINK = "http://diffeed.example.com/"
-FEED_TITLE = "Directory changes"
-CONFIG_FILE = "difffeed.yml"
 
 module Find
   # Returns array with the path to all files in a given directory
@@ -148,8 +144,11 @@ end
 
 
 if __FILE__ == $0
-  abort "Usage: #{$0} path [#{CONFIG_FILE}]" if ARGV.size == 0
+  abort "Usage: #{$0} path [config.yml [http://base-uri/ [title [max-items]]]]" if ARGV.size == 0
   path = ARGV[0]
-  filename = ARGV[1] || CONFIG_FILE
+  filename = ARGV[1] || "difffeed.yml"
+  FEED_LINK = ARGV[2] || "http://diffeed.example.com/"
+  FEED_TITLE = ARGV[3] || "Directory changes"
+  MAX_FEED_ITEMS = ARGV[4] || 30
   puts DiffFeed.update(filename, path)
 end
